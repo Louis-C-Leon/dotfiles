@@ -1,7 +1,8 @@
 #!/bin/bash
+
+echo 'Setting up my dev environment for Mac or Fedora'
 source /etc/os-release
 if [[ $OSTYPE == 'darwin'* ]]; then
-    echo 'Setting up for macOS'
     which -s brew
     if [[ $? != 0 ]] ; then
         echo 'Installing Homebrew'
@@ -10,23 +11,40 @@ if [[ $OSTYPE == 'darwin'* ]]; then
         echo 'Updating Homebrew'
         brew update
     fi
-    brew install neovim kitty
+    echo 'Updating packages'
+    brew upgrade
+    echo 'Installing packages'
+    brew install neovim kitty fd
 elif [[ $PRETTY_NAME == 'Fedora'* ]]; then
-    echo 'Setting up for Fedora Linux'
-    sudo dnf install neovim kitty
+    echo 'Updating packages'
+    sudo dnf upgrade --refresh
+    echo 'Installing packages'
+    sudo dnf install neovim kitty fd-find git
 else
-    echo 'This script is only configured for MacOS and Fedora Linux'
-    echo 'Looks like this is a different OS. Sorry!'
+    echo 'Did not identify OS as MacOS or Fedora. Exiting'
     exit 1
 fi
 
-ln -sfv "$(pwd)/.zshrc" $HOME
-ln -sfv "$(pwd)/.gitconfig" $HOME
-ln -sfv "$(pwd)/global_gitignore" $HOME .gitignore
-ln -sfv "$(pwd)/.config/nvim" $HOME/.config
-ln -sfv "$(pwd)/.config/kitty" $HOME/.config
-ln -sfv "$(pwd)/.config/starship.toml" $HOME/.config
+echo 'Installing starship command prompt'
+curl -sS https://starship.rs/install.sh | sh
 
-git config --global core.excludesfile ~/.gitignore
+echo 'Installing fzf with keybindings'
+git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
+$HOME/.fzf/install
+
+echo 'Installing latest nvm version'
+export NVM_DIR="$HOME/.nvm" && (
+  git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+  cd "$NVM_DIR"
+  git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+)
+
+# Link dotfiles
+ln -sfbvT "$(pwd)/zshrc" $HOME/.zshrc
+ln -sfbvT "$(pwd)/gitignore" $HOME/.gitignore
+ln -sfbvT "$(pwd)/gitconfig" $HOME/.gitconfig
+ln -sfbvt $HOME/.config "$(pwd)/nvim" "$(pwd)/kitty" "$(pwd)/starship.toml"
+
+git config --global core.excludesfile $HOME/.gitignore
 
 exit 0

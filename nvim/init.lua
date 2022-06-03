@@ -153,7 +153,6 @@ return packer.startup(function(use)
       Vi.g.nvim_tree_show_icons = { folders = 1 }
       require('nvim-tree').setup({
         view = { hide_root_folder = true, width = 50 },
-        filters = { custom = { '.git' } },
         update_focused_file = { enable = true }
       })
       NmapCmd('<leader>t', 'NvimTreeFindFile')
