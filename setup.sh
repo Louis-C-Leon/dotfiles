@@ -42,9 +42,12 @@ export NVM_DIR="$HOME/.nvm" && (
 echo '/nLinking config files'
 ln -sfbvT "$(pwd)/zshrc" $HOME/.zshrc
 ln -sfbvT "$(pwd)/gitignore" $HOME/.gitignore
-ln -sfbvT "$(pwd)/gitconfig" $HOME/.gitconfig
 ln -sfbvt $HOME/.config "$(pwd)/nvim" "$(pwd)/kitty" "$(pwd)/starship.toml"
 
+echo '/nConfiguring Git'
+git config --global pull.rebase false
+git config --global push.default current
 git config --global core.excludesfile $HOME/.gitignore
+git config --global core.editor nvim
 
 exit 0

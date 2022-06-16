@@ -1,6 +1,5 @@
-This is my personal repo for dotfiles and configuration of my development environment. The main tools I use are the Kitty terminal emulator, Zshell, and the NeoVim code editor. To use this config, you should install Kitty, NeoVim, and Starship prompt, set your default shell to Zsh, and add a `~/.zshrc` file that sources `~/.config/zsh/louis-config.zsh`. Other important tools I have configured are NVM and FZF; these should also be installed.
+Configuration for my personal development environment.
 
-## TODOS:
-- Write a setup script that works on both MacOS and Fedora Linux. Should install all tooling and deps.
-- Add debugger functionality to NeoVim.
-- Add database functionality to NeoVim.
+The setup script for my environment is a work in progress and might not work. Clone this repo and run `sh setup.sh` inside the directory to try it out.
+
+TODO: add debugger functionality to NeoVim. The editor should install debuggers as needed; compatible with VSCode if possible.
