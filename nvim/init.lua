@@ -59,6 +59,7 @@ Vi.cmd[[
   augroup END
 
   fu! SaveSess()
+      execute 'NvimTreeClose'
       execute 'mksession! ' . getcwd() . '/.session.vim'
   endfunction
 
@@ -150,10 +151,19 @@ return packer.startup(function(use)
   use {
     'kyazdani42/nvim-tree.lua',
     config = function()
-      Vi.g.nvim_tree_show_icons = { folders = 1 }
       require('nvim-tree').setup({
-        view = { hide_root_folder = true, width = 50 },
-        update_focused_file = { enable = true }
+        renderer = {
+          icons = {
+            webdev_colors = false,
+            show = { folder = true, folder_arrow = false, file = false, git = false },
+          },
+        },
+        filters = {
+          custom = { '.git' }
+        },
+        update_focused_file = {
+          enable = true,
+        }
       })
       NmapCmd('<leader>t', 'NvimTreeFindFile')
     end
@@ -284,5 +294,6 @@ return packer.startup(function(use)
       }
     end
   }
+
   if PACKER_BOOTSTRAP then require('packer').sync() end
 end)
