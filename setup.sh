@@ -1,8 +1,9 @@
 #!/bin/bash
 
-echo '\nSetting up my dev environment for Mac or Fedora\n'
+echo '\nSetting up my dev environment\n'
 source /etc/os-release
 if [[ $OSTYPE == 'darwin'* ]]; then
+    echo '\nMacOS detected\n'
     which -s brew
     if [[ $? != 0 ]] ; then
         echo '\nInstalling Homebrew\n'
@@ -14,7 +15,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     echo '\nUpdating packages\n'
     brew upgrade
     echo '\nInstalling packages\n'
-    brew install neovim kitty fd
+    brew install neovim kitty fd ripgrep fzy font-iosevka stow
 elif [[ $PRETTY_NAME == 'Fedora'* ]]; then
     echo '\nUpdating packages\n'
     sudo dnf upgrade --refresh
@@ -25,24 +26,12 @@ else
     exit 1
 fi
 
-echo '\nInstalling starship command prompt\n'
-curl -sS https://starship.rs/install.sh | sh
-
-echo '\nInstalling fzf with keybindings\n'
-git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-$HOME/.fzf/install
-
 echo '\nInstalling latest nvm version\n'
 export NVM_DIR="$HOME/.nvm" && (
   git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
   cd "$NVM_DIR"
   git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
 )
-
-echo '/nLinking config files'
-ln -sfbvT "$(pwd)/zshrc" $HOME/.zshrc
-ln -sfbvT "$(pwd)/gitignore" $HOME/.gitignore
-ln -sfbvt $HOME/.config "$(pwd)/nvim" "$(pwd)/kitty" "$(pwd)/starship.toml"
 
 echo '/nConfiguring Git'
 git config --global pull.rebase false
