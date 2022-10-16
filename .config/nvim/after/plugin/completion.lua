@@ -1,7 +1,7 @@
 local function config()
     local cmp = require('cmp')
     cmp.setup {
-        snippet = { expand = function(args) require('luasnip').lsp_expand(args.body) end },
+        snippet = { expand = function() end },
 
         -- mappings for autocomplete menu. Default vim completion mappings like <C-n>, <C-x><C-l>, should still work.
         mapping = {

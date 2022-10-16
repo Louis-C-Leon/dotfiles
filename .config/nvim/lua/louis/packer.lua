@@ -1,4 +1,4 @@
--- plugins installed from GitHub. See nvim/after/plugin/ for configuration
+-- Plugin repos are hosted at https://github.com/{plugin_path}. I put configs for these plugins in .config/nvim/after/plugin/
 local function install_plugins(use)
     use 'wbthomason/packer.nvim' -- plugin manager
     use 'nvim-lua/popup.nvim' -- UI library (common plugin dependency)
@@ -10,57 +10,33 @@ local function install_plugins(use)
     use 'windwp/nvim-autopairs' -- autocomplete paired chars
     use 'Darazaki/indent-o-matic' -- auto-set vim indent options based on current file
     use 'nvim-treesitter/nvim-treesitter' -- pretty highlighting and incremental selection
+    use 'nvim-tree/nvim-tree.lua' -- filetree window
     use {
-        'nvim-neo-tree/neo-tree.nvim', -- filetree explorer
-        branch = 'v2.x',
-        requires = 'MunifTanjim/nui.nvim' -- another UI library
-    }
-    use {
-        'nvim-telescope/telescope.nvim', -- incremental fuzzy finding with batteries included
+        'nvim-telescope/telescope.nvim', -- incremental fuzzy finding with builtin commands
         requires = 'nvim-telescope/telescope-fzy-native.nvim' -- use faster finder
     }
     use 'tpope/vim-fugitive' -- all the git integration you need
     use 'tpope/vim-rhubarb' -- provides ':GBrowse' cmd to open code in GitHub
     use 'lewis6991/gitsigns.nvim' -- more git visual feedback and commands
     use {
-        'williamboman/mason.nvim', -- installs and manages language tools like language servers, linters, and formatters
+        'williamboman/mason.nvim', -- installs and manages IDE tools like language servers, linters, and formatters
         requires = {
-            'jose-elias-alvarez/null-ls.nvim', -- lets linters and formatters hook in to nvim's LSP client
-            'neovim/nvim-lspconfig',
-            'williamboman/mason-lspconfig.nvim'
+            'jose-elias-alvarez/null-ls.nvim', -- let linters and formatters hook in to nvim's LSP client
+            'jayp0521/mason-null-ls.nvim', -- integrate null_ls and mason.nvim to play nicely
+            'neovim/nvim-lspconfig', -- language server config utils, maintained by neovim core team
+            'williamboman/mason-lspconfig.nvim', -- integrate nvim-lspconfig and mason.nvim to play nicely
+            'hrsh7th/cmp-nvim-lsp' -- integrate language servers with autocomplete framework
         }
     }
-
-    -- language server integration for IDE-like features
-    -- TODO: use mason.nvim
     use {
-        'neovim/nvim-lspconfig',
-        -- language installer, completion, and linting/formatting plugins
+        'hrsh7th/nvim-cmp', -- modular autocomplete plugin; no sources included
         requires = {
-            'williamboman/nvim-lsp-installer',
-            'jose-elias-alvarez/null-ls.nvim',
-            'hrsh7th/cmp-nvim-lsp'
+            'hrsh7th/cmp-nvim-lsp', -- autocomplete from language servers
+            'hrsh7th/cmp-buffer', -- autocomplete from current file text
+            'hrsh7th/cmp-path', -- autocomplete file paths from neovim cwd
+            'hrsh7th/cmp-nvim-lsp-signature-help', -- use autocomplete UI to show help when typing function args
         }
     }
-
-    -- modular autocomplete plugin
-    -- NOTE: nvim-cmp currently requires a snippet plugin to work correctly.
-    -- this config does not install any snippets.
-    use {
-        'hrsh7th/nvim-cmp',
-        -- autocomplete sources
-        requires = {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-nvim-lsp-signature-help',
-            'L3MON4D3/LuaSnip',
-            'saadparwaiz1/cmp_luasnip'
-        }
-    }
-
-    -- run PackerSync if packer has just been bootstrapped
-    if PACKER_BOOTSTRAP then require('packer').sync() end
 end
 
 -- try to bootstrap package manager if it's not installed
