@@ -1,7 +1,7 @@
 local function config()
     local cmp = require('cmp')
     cmp.setup {
-        snippet = { expand = function() end },
+        snippet = { expand = function() end }, -- install a snippets engine and snippets to use
 
         -- mappings for autocomplete menu. Default vim completion mappings like <C-n>, <C-x><C-l>, should still work.
         mapping = {

@@ -1,44 +1,41 @@
-local util = require('louis.util')
+local opts = { noremap = true, silent = true }
 
 -- window keymaps
-util.ncmd('<C-h>', 'wincmd h')
-util.ncmd('<C-j>', 'wincmd j')
-util.ncmd('<C-k>', 'wincmd k')
-util.ncmd('<C-l>', 'wincmd l')
-util.ncmd('<C-z>', 'wincmd o')
+vim.keymap.set('n', '<C-h>', function() vim.cmd.wincmd('h') end, opts)
+vim.keymap.set('n', '<C-j>', function() vim.cmd.wincmd('j') end, opts)
+vim.keymap.set('n', '<C-k>', function() vim.cmd.wincmd('k') end, opts)
+vim.keymap.set('n', '<C-l>', function() vim.cmd.wincmd('l') end, opts)
+vim.keymap.set('n', '<C-z>', function() vim.cmd.wincmd('o') end, opts)
 
 -- quickfix list keymaps
-util.ncmd('<leader>j', 'cnext')
-util.ncmd('<leader>k', 'cprev')
-util.ncmd('<leader>d', 'cfdo')
-util.ncmd('<leader>l', 'copen')
+vim.keymap.set('n', '<leader>j', vim.cmd.cnext, opts)
+vim.keymap.set('n', '<leader>k', vim.cmd.cprev, opts)
+vim.keymap.set('n', '<leader>l', vim.cmd.copen, opts)
 
 -- save all
-util.ncmd('<C-s>', 'wa')
+vim.keymap.set('n', '<C-s>', vim.cmd.wa, opts)
 
 -- close file (closes all windows)
-util.ncmd('q', 'bd')
+vim.keymap.set('n', 'q', vim.cmd.bdelete, opts)
 
 -- close all buffers and windows except for focused window
--- TODO: this could work better
-util.ncmd('<c-q>', '%bd|e#|bd#')
+-- TODO: this could work better; write in lua and make resilient
+vim.keymap.set('n', '<c-q>', function() vim.cmd('%bd|e#|bd#') end, opts)
 
 -- use 'm' to record and replay macros
-util.nmap('m', 'q')
-util.nmap('M', 'Q')
+vim.keymap.set('n', 'm', 'q', opts)
+vim.keymap.set('n', 'M', 'Q', opts)
 
 -- save deleted text in named 'd' register instead of system clipboard
-util.nmap('d', '"dd')
-util.vmap('d', '"dd')
-util.nmap('dd', '"ddd')
-util.nmap('D', '"dD')
-util.nmap('c', '"dc')
-util.vmap('c', '"dc')
-util.nmap('cc', '"dcc')
-util.nmap('C', '"dC')
+vim.keymap.set({ 'n', 'v' }, 'd', '"dd', opts)
+vim.keymap.set('n', 'dd', '"ddd', opts)
+vim.keymap.set('n', 'D', '"dD', opts)
+vim.keymap.set({ 'n', 'v' }, 'c', '"dc', opts)
+vim.keymap.set('n', 'cc', '"dcc', opts)
+vim.keymap.set('n', 'C', '"dC', opts)
 
 -- don't overwrite any registers when pasting in visual mode
-util.vmap('p', '"_dP')
+vim.keymap.set('v', 'p', '"_dP', opts)
 
 -- <spacebar><enter> to quit neovim
-util.ncmd('<leader><CR>', 'qa')
+vim.keymap.set('n', '<leader><CR>', vim.cmd.qall, opts)

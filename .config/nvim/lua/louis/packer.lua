@@ -1,23 +1,35 @@
 -- Plugin repos are hosted at https://github.com/{plugin_path}. I put configs for these plugins in .config/nvim/after/plugin/
 local function install_plugins(use)
     use 'wbthomason/packer.nvim' -- plugin manager
+    use 'lewis6991/impatient.nvim' -- caches lua modules to speed up startup
     use 'nvim-lua/popup.nvim' -- UI library (common plugin dependency)
     use 'nvim-lua/plenary.nvim' -- lua utility library (common plugin dependency)
+
     use 'EdenEast/nightfox.nvim' -- pretty themes
     use 'NvChad/nvim-colorizer.lua' -- highlight hex color codes
-    use 'numToStr/Comment.nvim' -- smart commenting plugin
-    use 'tpope/vim-surround' -- enhanced functionality for 'surrounding' chars, e.g. () {}
-    use 'windwp/nvim-autopairs' -- autocomplete paired chars
-    use 'Darazaki/indent-o-matic' -- auto-set vim indent options based on current file
-    use 'nvim-treesitter/nvim-treesitter' -- pretty highlighting and incremental selection
     use 'nvim-tree/nvim-tree.lua' -- filetree window
+    use 'nvim-lualine/lualine.nvim' -- pretty statusline and window line
     use {
         'nvim-telescope/telescope.nvim', -- incremental fuzzy finding with builtin commands
         requires = 'nvim-telescope/telescope-fzy-native.nvim' -- use faster finder
     }
+
+    use 'tpope/vim-surround' -- enhanced functionality for 'surrounding' chars, e.g. () {}
+    use 'numToStr/Comment.nvim' -- smart commenting plugin
+    use 'windwp/nvim-autopairs' -- autocomplete paired chars
+    use 'Darazaki/indent-o-matic' -- auto-set vim indent options based on current file
+
+    use {
+        'nvim-treesitter/nvim-treesitter', -- parses code for smarter highlighting and more
+        requires = {
+            'RRethy/nvim-treesitter-textsubjects' -- operate on current treesitter context 
+        }
+    }
+
     use 'tpope/vim-fugitive' -- all the git integration you need
     use 'tpope/vim-rhubarb' -- provides ':GBrowse' cmd to open code in GitHub
     use 'lewis6991/gitsigns.nvim' -- more git visual feedback and commands
+
     use {
         'williamboman/mason.nvim', -- installs and manages IDE tools like language servers, linters, and formatters
         requires = {
@@ -28,6 +40,7 @@ local function install_plugins(use)
             'hrsh7th/cmp-nvim-lsp' -- integrate language servers with autocomplete framework
         }
     }
+
     use {
         'hrsh7th/nvim-cmp', -- modular autocomplete plugin; no sources included
         requires = {
@@ -42,16 +55,16 @@ end
 -- try to bootstrap package manager if it's not installed
 local packpath = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 if vim.fn.empty(vim.fn.glob(packpath)) > 0 then
-    PACKER_BOOTSTRAP = vim.fn.system {
+    PACKER_BOOTSTRAP = vim.fn.system({
         'git',
         'clone',
         '--depth',
         '1',
         'https://github.com/wbthomason/packer.nvim',
         packpath
-    }
-    print 'Installing packer. Close and reopen Neovim...'
-    vim.cmd 'packadd packer.nvim'
+    })
+    print('Installing packer. Close and reopen Neovim...')
+    vim.cmd.packadd('packer.nvim')
 end
 local packer_installed, packer = pcall(require, 'packer')
 if not packer_installed then return end

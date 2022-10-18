@@ -1,4 +1,17 @@
-local util = require('louis.util')
+local function restore_session()
+    local session_path = vim.fn.getcwd() .. '/.session.vim'
+    if vim.fn.filereadable(session_path) then
+        local restore_cmd = 'so ' .. session_path
+        vim.cmd(restore_cmd)
+    end
+end
+
+-- quickfix list and filetree don't work when restoring sessions
+local function save_session()
+    vim.cmd.cclose()
+    vim.cmd('NvimTreeClose')
+    vim.cmd('mksession! ' .. vim.fn.getcwd() .. '/.session.vim')
+end
 
 -- save session in cwd whenever I quit nvim
 vim.api.nvim_create_autocmd(
@@ -9,9 +22,9 @@ vim.api.nvim_create_autocmd(
             { clear = true }
         ),
         pattern = '*',
-        callback = util.save_session
+        callback = save_session
     }
 )
 
 -- set keymap to restore session
-util.ncmd('<leader>r', 'lua require(\'louis.util\').restore_session()')
+vim.keymap.set('n', '<leader>r', restore_session, { noremap = true, silent = true })

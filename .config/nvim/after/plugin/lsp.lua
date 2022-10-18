@@ -12,7 +12,6 @@ local function setup_server(server_name)
             local bufopts = { noremap = true, silent = true, buffer = bufnr }
             vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
             vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
             vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts)
             vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, bufopts)
             vim.keymap.set('n', '<C-f>', function() vim.lsp.buf.format { async = true } end, bufopts)
@@ -33,8 +32,8 @@ local function setup_diagnostics()
 
     -- ./telescope.lua configures the keymap to search through all diagnostics
     vim.keymap.set('n', 'Z', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', 'zj', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', 'zk', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', 'zk', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', 'zj', vim.diagnostic.goto_next, opts)
 end
 
 local function setup_lsp_handlers()
