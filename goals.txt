@@ -1,0 +1,22 @@
+Team Participation:
+- Read and comment on 2 PRs per week (in any Robin project); block off calendar time for PR review
+- Respond to PR review requests promptly (within 2 days?).
+- Read/comment on all design docs
+- Be more open to pair programming. (how to quantify?)
+
+Dev practices and organization:
+- Create and share docs for everything. This includes bugs that I observe or are aware of; projects that
+    are never kicked off or kicked off but never finished; and existing places in the codebase that lack docs/knowledge
+
+Work on Coding outside of sprint work (set discreet monthly goals during checkin):
+- Hours per week? 2-4?
+- Make one contribution (PR) per month outside of the sprint/roadmap that contributes to tech foundation (track this on Jira).
+    Examples could be updating documentation, organizing code, updating outdated code/types, etc.
+    Robin repos, or any project inc. open source?
+    - For January: add dev documentation about our Slate implementation. Start documenting current Slate performance issues.
+        Share docs on issues; follow up on action items.
+    - More Slate work: Work on docs rather than an issue. Look for outdated or unclear docs and submit a PR.
+    - Other idea: Work on something I'm more interested in rather than Slate for open source work. Project Slippi
+
+Health plan:
+    - Wrist/arm health is still a question mark.

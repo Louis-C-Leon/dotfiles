@@ -1,33 +1,32 @@
-local language_servers = { 'bashls', 'cssls', 'html', 'jsonls', 'sumneko_lua', 'tsserver' }
+local default_setup = require('louis.lsp-config.default')
+local break_into_lines = require('louis.format-utils').break_into_lines
 
+-- list of language servers to install; add more servers here when needed
+-- run `:Mason` command to see info on available servers and updates
+local language_servers = { 'bashls', 'cssls', 'html', 'jsonls', 'lua_ls', 'tsserver' }
+
+-- If I need server-specific config, create a new file `.config/nvim/lua/louis/lsp-config/{server_name}`
+-- The file should export a function named `setup_server`
 local function setup_server(server_name)
-    require('lspconfig')[server_name].setup({
-        on_attach = function(client, bufnr)
-            -- I want prettier to format JS and TS, not tsserver
-            if client.name == 'tsserver' then
-                client.server_capabilities.documentFormattingProvider = false
-            end
-
-            -- keymaps; other actions like goto definition or references are handled by telescope, see ./telescope.lua
-            local bufopts = { noremap = true, silent = true, buffer = bufnr }
-            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-            vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-            vim.keymap.set('n', 'rn', vim.lsp.buf.rename, bufopts)
-            vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, bufopts)
-            vim.keymap.set('n', '<C-f>', function() vim.lsp.buf.format { async = true } end, bufopts)
-        end,
-
-        -- integrate language server with autocomplete framework.
-        capabilities = require('cmp_nvim_lsp').default_capabilities()
-    })
+    local has_custom_setup, custom_setup = pcall(require, 'louis.lsp-config.' .. server_name)
+    if has_custom_setup then
+        custom_setup.setup_server(server_name)
+    else
+        default_setup.setup_server(server_name)
+    end
 end
 
 local function setup_diagnostics()
-    local opts = { noremap = true, silent = true }
+    local opts = { noremap = true }
     vim.diagnostic.config({
-        virtual_text = { prefix = '' },
-        float = { width = 90 },
-        signs = false
+        virtual_text = false,
+        float = {
+            border = 'single',
+            format = function(diagnostic)
+                return break_into_lines(diagnostic.message, 85)
+            end
+        },
+        signs = false,
     })
 
     -- ./telescope.lua configures the keymap to search through all diagnostics
@@ -39,30 +38,27 @@ end
 local function setup_lsp_handlers()
     vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
         vim.lsp.handlers.hover,
-        { width = 90 }
+        { border = 'single' }
     )
 end
 
-local function config()
-    setup_diagnostics()
-    setup_lsp_handlers()
-
-    -- mason handles installing required packages for language servers, linters, and formatters
+pcall(function()
+    -- plugin for installing language servers, linters, and formatters
     require('mason').setup()
 
-    -- integrate linters and formatters into nvim lsp client
+    -- configure and install linters and formatters
     local null_ls = require('null-ls');
     null_ls.setup({
         sources = {
-            null_ls.builtins.formatting.prettierd,
+            null_ls.builtins.formatting.prettier,
             null_ls.builtins.diagnostics.eslint_d
         }
     })
     require('mason-null-ls').setup({ automatic_installation = true })
 
-    -- install and setup language servers
+    -- configure and install language servers
     require('mason-lspconfig').setup({ ensure_installed = language_servers })
     require('mason-lspconfig').setup_handlers({ setup_server })
-end
-
-pcall(config)
+    setup_diagnostics()
+    setup_lsp_handlers()
+end)

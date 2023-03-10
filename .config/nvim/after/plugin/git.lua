@@ -1,28 +1,23 @@
-local function config()
-    local util = require('louis.util')
-
-    require('gitsigns').setup({
-        signcolumn = false,
-        numhl = true,
-    })
+pcall(function()
+    local opts = { noremap = true }
+    require('gitsigns').setup()
 
     -- vim-fugitive
-    util.ncmd('<leader>g', 'Git')
-    util.ncmd('<leader>p', 'Git pull')
-    util.ncmd('<leader>P', 'Git push')
-    util.ncmd('gL', 'Git log')
-    util.ncmd('gB', 'Git blame --date=short')
-    util.nmap('g<space>', ':Git<space>')
-    util.nmap('<leader>c', ':Git commit -m ""<left>')
+    vim.keymap.set('n', '<leader>g', '<cmd>bot Git<cr>', opts)
+    vim.keymap.set('n', '<leader>p', '<cmd>echo "Git pull" | Git pull<cr>', opts)
+    vim.keymap.set('n', '<leader>P', '<cmd>echo "Git push" | Git push<cr>', opts)
+    vim.keymap.set('n', 'gl', '<cmd>vertical Git log<cr>', opts)
+    vim.keymap.set('n', 'gb', '<cmd>Git blame --date=short<cr>', opts)
+    vim.keymap.set('n', 'g<space>', ':Git<space>', opts)
+    vim.keymap.set('n', '<leader>c', ':Git commit -m ""<left>', opts)
 
     -- vim-rhubarb
-    util.ncmd('go', 'GBrowse')
-    util.vcmd('go', 'GBrowse')
+    vim.keymap.set('n', 'go', '<cmd>GBrowse<cr>', opts)
+    vim.keymap.set('v', 'go', '<cmd>\'<,\'>GBrowse<cr>', opts)
 
     -- gitsigns.nvim
-    util.ncmd('gj', 'Gitsigns next_hunk')
-    util.ncmd('gk', 'Gitsigns prev_hunk')
-    util.nmap('gv', ':Gitsigns diffthis<space>')
-end
-
-pcall(config)
+    vim.keymap.set('n', 'gj', '<cmd>Gitsigns next_hunk<cr>', opts)
+    vim.keymap.set('n', 'gk', '<cmd>Gitsigns prev_hunk<cr>', opts)
+    vim.keymap.set('n', 'gv', ':Gitsigns diffthis<space>', opts)
+    vim.keymap.set('n', 'gV', ':DiffviewOpen<space>', opts)
+end)

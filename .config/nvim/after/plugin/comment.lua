@@ -1,1 +1,14 @@
-pcall(function() require('Comment').setup() end)
+pcall(function()
+    require('Comment').setup({
+        toggler = {
+            block = 'gCC'
+        },
+        opleader = {
+            block = 'gC'
+        },
+        mappings = {
+            basic = true,
+            extra = false,
+        }
+    })
+end)
